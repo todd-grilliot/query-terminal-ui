@@ -6,6 +6,7 @@ module.exports = {
   theme: {
     fontFamily: {
       'mono': ['Space Mono', 'ui-monospace', 'Consolas'],
+      // 'mono': [ 'ui-monospace', 'Consolas'],
     },
     extend: {},
   },

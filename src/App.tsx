@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-import TerminalGui from './Components/TerminalGui';
+import Terminal from './Components/Terminal';
 
 function App() {
   console.log('calling app');
@@ -66,7 +66,7 @@ function App() {
           Learn React
         </a>
       </header> */}
-      <TerminalGui />
+      <Terminal />
     </div>
   );
 }
