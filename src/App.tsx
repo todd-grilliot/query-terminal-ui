@@ -5,7 +5,7 @@ import './App.css';
 import Terminal from './Components/Terminal';
 
 function App() {
-  console.log('calling app');
+  // console.log('calling app');
 
   const url = 'http://localhost:5000/api/';
 
