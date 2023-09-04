@@ -14,8 +14,8 @@ export async function getQuery() {
   }
 }
 
-export async function answerQuery(answer: string, id: string) {
-  console.log('calling answerQuery');
+export async function writeAnswer(answer: string, id: string) {
+  console.log('calling writeAnswer');
   try {
     const response = await (await fetch(`${url}/answer/${id}`, {
       method: 'PUT',

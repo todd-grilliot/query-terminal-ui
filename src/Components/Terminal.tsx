@@ -1,41 +1,56 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 // import Block from './Block';
 import Cursor from './Cursor';
 // import Chalk from './Chalk';
 
 import Block from './Block/Index';
-import { BlockType, ValidResponseType } from '../Types';
-import { initialBlock, commandList } from '../Library';
+import { BlockPropsType, LineType, ValidResponseType } from '../Types';
+import { initialBlock, initialLines } from '../Library';
 import { isEmptyObj } from '../Utils';
 
 function Terminal() {
-    console.log('terminal gui');
-    const [ blocks, setBlocks ] = useState<BlockType[]>([initialBlock]);
+    const [ blocks, setBlocks ] = useState<BlockPropsType[]>([]);
     const [ currentChain, setCurrentChain ] = useState<Record<string, string>>({});
     const [ cursorText, setCursorText ] = useState('');
+    const [ prevResCache, setPrevResCache ] = useState<ValidResponseType>();
 
-    function handleResponse(response: ValidResponseType | null){
-        console.log('handling response: ', response);
+    useEffect( () => {
+        (async () => {
+        // initialize
+        await write(initialLines)
+        console.log('done writing init')
+        })()
+    }, []);
 
+    const write = (lines: LineType[]): Promise<void> => {
+        return new Promise((resolve, reject) => {
+            setBlocks(prev => [...prev, { lines, finishCallback }]);
+            const finishCallback = (() => {
+                resolve();
+            })
+        })
     }
 
     function onSubmit(input: string){
         console.log('onSubmit: ' + input);
 
-        const lookup = isEmptyObj(currentChain) ? input : currentChain[input];
-        const defaultCommand = commandList[currentChain.defaultCmd] ?? commandList.defaultCmd;
-        const command = commandList[lookup] ?? defaultCommand;
-        let newBlock;
-        // if command is a function, run it, otherwise. setBlocks.
-        if( typeof command === 'function') command();
-        else {
-            if (command.chain) setCurrentChain(command.chain);
-            newBlock = {...command, input}
-            setBlocks([...blocks, newBlock]);
-        }
+        // const lookup = isEmptyObj(currentChain) ? input : currentChain[input];
+        // const defaultCommand = commandList[currentChain.defaultCmd] ?? commandList.defaultCmd;
+        // const command = commandList[lookup] ?? defaultCommand;
+        // let newBlock;
+
+        // if( typeof command === 'function') command(); 
+
+        // else {
+        //     if (command.chain) setCurrentChain(command.chain);
+        //     newBlock = {...command, input}
+        //     setBlocks([...blocks, newBlock]);
+        // }
  
-        setCursorText('');
+        // setCursorText('');
     }
+
+
 
     // bug where a new line will not animate if there is a line before it that is an empty string.
     // a space string ' ' will stop rendering that line entirely.
@@ -53,11 +68,14 @@ function Terminal() {
 
                 {blocks.map((blockProps, index) => (
                     <Block 
+                        // lines={mainLines}
+                        // setLines={setMainLines}
                         key={index} 
                         {...blockProps}
-                        handleResponse={handleResponse}
+                        // handleResponse={handleResponse}
+                        // prevResCache={prevResCache}
                     />
-                ))}
+                ))} 
 
                 <Cursor
                     onSubmit={onSubmit}

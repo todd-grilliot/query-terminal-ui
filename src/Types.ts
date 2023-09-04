@@ -1,21 +1,22 @@
 
-export type BlockPropsType = BlockType & {
-    handleResponse: (response: ValidResponseType | null) => void;
-}
-export type BlockType = {
+// blocks should only handle things related to the block.
+export type BlockPropsType = {
+    lines: LineType[];
     animated?: boolean;
     speed?: number;
-    initLines: LineType[];
-    call?: CallType<ValidResponseType>;
-    lineAfterCall?: LineType;
-    chain?: Record<string, any>;
-    input?: null | string;
+    finishCallback?: () => void; // figure out in a minute
 }
 
+
 export type CallType<ResponseGeneric> = {
+    // our function API call.
     promise: (...args: any[]) => Promise<ResponseGeneric | null>;
+    // the Line that will be displayed if the call fails
     failMessage: LineType;
+    // the fields that will be read from the response.
+    // the call
     readFields: string[];
+    // headers that will be shown before the response.
     readHeaders?: string[];
 }
 
@@ -37,7 +38,6 @@ export type CurrentLinePropsType = {
     speed: number;
     currentLineIndex: number;
     setCurrentLineIndex: React.Dispatch<React.SetStateAction<number>>
-    // currentLineLength: number;
 }
 
 export type ValidResponseType = QueryResponseType;

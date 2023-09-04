@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { CurrentLinePropsType } from '../../Types';
 
+// current line exists inside of block
 export default function CurrentLine({
     lines,
     animated,
     speed,
     currentLineIndex,
-    setCurrentLineIndex
+    setCurrentLineIndex,
+	// finishCallback,
     // currentLineLength
 }: CurrentLinePropsType) {
 
