@@ -4,9 +4,8 @@ export type BlockPropsType = {
     lines: LineType[];
     animated?: boolean;
     speed?: number;
-    finishCallback?: () => void; // figure out in a minute
+    resolvePromise?: () => void;
 }
-
 
 export type CallType<ResponseGeneric> = {
     // our function API call.

@@ -1,38 +1,49 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 // import Block from './Block';
 import Cursor from './Cursor';
 // import Chalk from './Chalk';
 
-import Block from './Block/Index';
+import { initialLines, otherLines } from '../Library';
 import { BlockPropsType, LineType, ValidResponseType } from '../Types';
-import { initialBlock, initialLines } from '../Library';
-import { isEmptyObj } from '../Utils';
+import Block from './Block/Index';
+import useCommands, { CommandEnum, isCommandEnum } from './useCommands';
 
+
+/** Terminal is rendered by App.tsx at the highest level, this should be the Parent of all */
 function Terminal() {
     const [ blocks, setBlocks ] = useState<BlockPropsType[]>([]);
-    const [ currentChain, setCurrentChain ] = useState<Record<string, string>>({});
+    const [ validCommands, setValidCommands ] = useState<CommandEnum[]>([]);
     const [ cursorText, setCursorText ] = useState('');
     const [ prevResCache, setPrevResCache ] = useState<ValidResponseType>();
-
-    useEffect( () => {
-        (async () => {
-        // initialize
-        await write(initialLines)
-        console.log('done writing init')
-        })()
-    }, []);
-
+    
     const write = (lines: LineType[]): Promise<void> => {
         return new Promise((resolve, reject) => {
-            setBlocks(prev => [...prev, { lines, finishCallback }]);
-            const finishCallback = (() => {
+            setBlocks(prev => [...prev, { lines, resolvePromise }]);
+            const resolvePromise = (() => {
                 resolve();
             })
         })
     }
 
+    /** A hook for all the commands, to prevent this file from getting too huge */
+    const {...commands} = useCommands(write, setValidCommands);
+
+    useEffect( () => {
+        (async () => {
+        // initialize
+        // await write(initialLines)
+        await commands.initialize();
+        console.log('done writing init')
+        await write(otherLines) 
+        })()
+    }, []);
+
+
+
     function onSubmit(input: string){
         console.log('onSubmit: ' + input);
+
+        if(isCommandEnum(input)) commands[input]();
 
         // const lookup = isEmptyObj(currentChain) ? input : currentChain[input];
         // const defaultCommand = commandList[currentChain.defaultCmd] ?? commandList.defaultCmd;

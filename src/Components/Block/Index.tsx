@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
-import { BlockPropsType, isValidResponseKey} from "../../Types";
+import { useEffect, useState } from "react";
+import { BlockPropsType } from "../../Types";
 import CurrentLine from "./CurrentLine";
 
+/** Terminal wraps a series of Block components */
 function Block({ 
 	lines,
-	finishCallback,
+	resolvePromise,
 	// setLines,
 	animated = true, 
 	speed = 20, 
@@ -65,7 +66,7 @@ function Block({
 
 	useEffect(() => {
 		// i'm not sure if the finish callback needs to be a boolean, the idea is that I might be able to handle failures.
-		if(currentLineIndex === lines.length && finishCallback) finishCallback();
+		if(currentLineIndex === lines.length && resolvePromise) resolvePromise();
 	}, [lines, currentLineIndex]);
 
 
