@@ -1,23 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { CurrentLinePropsType } from '../../Types';
 
-// current line exists inside of block
+/** current line is the line being printed, intended to be the child of a block component */
 export default function CurrentLine({
     lines,
     animated,
     speed,
     currentLineIndex,
     setCurrentLineIndex,
-	// finishCallback,
-    // currentLineLength
 }: CurrentLinePropsType) {
 
 	const [currentLineLength, setCurrentLineLength] = useState(0);
     
 	const currentLine = lines[currentLineIndex];
+	const lineLength = currentLine?.strings.reduce((total, str) => (str?.length ?? 0) + total, 0);
 
     useEffect(() => {
-		if(!animated) return;
+		if(!animated) {
+			setCurrentLineLength(lineLength);
+			return;
+		}
 		if(currentLineIndex >= lines.length) return;
 
         const timer = setTimeout(() => {
@@ -28,12 +30,10 @@ export default function CurrentLine({
 	},[currentLineIndex, currentLineLength, lines.length, speed, animated]);
 
     useEffect(() => {
-        const lineLength = currentLine?.strings.reduce((total, str) => str.length + total, 0);
         if(currentLineLength >= lineLength) nextLine();
     },[currentLineLength])
 
 	function nextLine(){
-		console.log('next line!, lineindex is: ', currentLineIndex + 1)
 		setCurrentLineLength(0);
 		setCurrentLineIndex(currentLineIndex + 1);
 	}
@@ -53,7 +53,7 @@ export default function CurrentLine({
 						), 0);
 
 					// show just what's allowed. Previous strings show in full, current shows partial, future strings max at 0.
-					const slicedString = str.slice(0, Math.max(currentLineLength - prevStringsLength, 0));
+					const slicedString = str?.slice(0, Math.max(currentLineLength - prevStringsLength, 0)) ?? '';
 
 					return (
 						<span

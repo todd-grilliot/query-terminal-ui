@@ -24,13 +24,6 @@ export type LineType = {
     styles?: React.CSSProperties[];
 }
 
-export type CursorPropsType = {
-    disabled?: boolean;
-    onSubmit: Function;
-    text: string;
-    setText: React.Dispatch<React.SetStateAction<string>>;
-};
-
 export type CurrentLinePropsType = {
     lines: LineType[];
     animated: boolean;

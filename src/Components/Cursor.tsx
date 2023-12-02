@@ -1,17 +1,35 @@
 import React, { useEffect, useState } from "react";
-import { CursorPropsType } from "../Types";
 
+export type CursorPropsType = {
+    disabled?: boolean;
+    onSubmit: Function;
+    text: string;
+    setText: React.Dispatch<React.SetStateAction<string>>;
+    loading: boolean;
+};
 
-function Cursor({ disabled, onSubmit, text, setText }: CursorPropsType) {
+    // const series = [`.   `, `..  `, `... `, `....`, ` ...`, `  ..`, `   .`, `    `];
+    const series = [`.  `, `.. `, `...`, ` ..`, `  .`, `   `];
+
+function Cursor({ disabled, onSubmit, text, setText, loading }: CursorPropsType) {
     const [isBlinked, setIsBlinked] = useState(false);
+    const [loadingIndicator, setLoadingIndicator] = useState(series[0]);
 
     useEffect(()=>{
-        // console.log('blinking');
         const blinkTimer = setTimeout(() => {
 			setIsBlinked(false);
-		}, 20)
+		}, 40)
         return () => clearTimeout(blinkTimer);
-    },[isBlinked])
+    },[isBlinked]);
+
+    useEffect(() => {
+        if(!loading) return;
+        const loadingTimer = setTimeout(() => {
+            const next = series[series.indexOf(loadingIndicator) + 1] ?? series[0];
+            setLoadingIndicator(next);
+        }, 200);
+        return () => clearTimeout(loadingTimer);
+    }, [loading, loadingIndicator]);
 
     const handleKeyDown = (e: KeyboardEvent) => {
         if(
@@ -36,7 +54,9 @@ function Cursor({ disabled, onSubmit, text, setText }: CursorPropsType) {
 
     return (
         <div className="h-6">
-            <p className="text-white text-left font-mono">{text}{!isBlinked && '█'}</p>
+            <p className="text-white text-left font-mono" style={{whiteSpace: 'pre-wrap'}}>
+                {text}{loading ? `${loadingIndicator}` : !isBlinked && '█'}
+            </p>
         </div>
     );
 }
