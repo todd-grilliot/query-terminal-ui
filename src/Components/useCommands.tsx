@@ -13,11 +13,6 @@ const arrayOfCommands = [
 
 export type CommandEnum = typeof arrayOfCommands[number];
 
-// type CommandParamsType = {
-//     input: string;
-//     // args: string[];
-//     // id: string;
-// }
 type CommandType = (input: string) => Promise<void>;
 
 type CommandMetaData = {
@@ -32,7 +27,6 @@ type ActiveCommandList = Partial<Record<CommandEnum, (...args: any[]) => void>> 
 type ArgsType = {
     write: (lines: LineType[]) => Promise<void>;
     setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-    // setCachedId: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export default function useCommands({
@@ -60,16 +54,11 @@ export default function useCommands({
     const saveCommand = (input: string, name: string) => {
         console.log('saving command: ', name, commandCache);
         setCommandCache(prev => [{input, name}, ...prev]);
-        // setCommandCache(prev => [{args: ['args'], input: 'input', id: 'id', name}]);
     }
 
     /** Command Functions --- can be named seperately from the keywords that fire them. */
-    // console.log('activeCommands: ', activeCommands);
-    // console.log('commandCache: ', commandCache);
-
     const load: CommandType = async (input) => {
         saveCommand(input, 'init');
-        // setCommandCache(prev => [{args: ['args'], input: 'input', id: 'id', name: 'name'}]);
         setLoading(true);
         await new Promise(resolve => setTimeout(resolve, 5000));
         setLoading(false);

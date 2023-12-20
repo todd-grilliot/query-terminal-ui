@@ -2,8 +2,7 @@ import { LineType } from "./Types";
 
 export const initialLines: LineType[] =  [
     {
-        strings: ['Welcome Friend. This is a place to ask and answer questions.', 'PART TWO'],
-        styles: [{color: 'white'}, {color: 'red'}]
+        strings: ['Hi there. This is a terminal for asking and answering questions.'],
     },
     {
         strings: ['This terminal accepts text input commands only. type -h or --help for help.', 'part two']
